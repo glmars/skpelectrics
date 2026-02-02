@@ -22,6 +22,31 @@ module Lvm444Dev
       end
     end
 
+    def self.calculate_reserves_by_entity(entity, reserves = Hash.new(0))
+      if entity.is_a?(Sketchup::Group)
+        puts "#{entity.name}:entities=#{entity.entities.size}"
+        entity.entities.each { |entity_in_group| calculate_reserves_by_entity(entity_in_group, reserves) }
+      elsif entity.is_a?(Sketchup::Edge)
+        puts "(edge):vertices=#{entity.vertices.size}"
+        entity.vertices.each { |vertex| calculate_reserves_by_entity(vertex, reserves) }
+      elsif entity.is_a?(Sketchup::Vertex)
+        puts "(vertex):edges=#{entity.edges.size}"
+        vertex_reserve = calculate_reserve_by_vertex(entity)
+        return reserves until vertex_reserve
+
+        reserves[vertex_reserve] += 1
+      end
+
+      reserves
+    end
+
+    def self.calculate_reserve_by_vertex(vertex)
+      return nil unless vertex.edges.size == 1
+
+      default_length_m = 0.3 # 300 mm default reserve length
+      return default_length_m
+    end
+
     def self.get_skp_model
       Sketchup.active_model
     end

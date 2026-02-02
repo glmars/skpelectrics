@@ -50,6 +50,8 @@ module Lvm444Dev
         materials_summary = Hash.new()
 
         lines.each do |line|
+          puts "[#{line.to_desc}] запас: #{line.reserves}"
+
           lines_type_summary[line.type] =  lines_type_summary.fetch(line.type,0).to_f + line.length
           lines_room_summary[line.room] =  lines_room_summary.fetch(line.room,0).to_f + line.length
 

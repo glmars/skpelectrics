@@ -15,6 +15,13 @@ module Lvm444Dev
 
     unless file_loaded?(__FILE__)
       reload
+
+      toolbar=UI::Toolbar.new('Электрика SKP')
+      toolbar.add_item(UI::Command.new('Сформировать кабельный журнал') {
+        Lvm444Dev::SkpElectricsDialogs::DialogsCreateLineReport.show_dialog
+      })
+      toolbar.restore
+
       menu = UI.menu('Plugins').add_submenu('skpelectrics')
 
       menu.add_item('Настройки') {
