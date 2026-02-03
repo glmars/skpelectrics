@@ -86,7 +86,7 @@ module Lvm444Dev
     end
 
     def reserves
-      Lvm444Dev::SketchupUtils.calculate_reserves_by_entity(@group)
+      Lvm444Dev::SketchupUtils.calculate_electric_line_reserves(@group)
     end
 
     def wire_type_sums

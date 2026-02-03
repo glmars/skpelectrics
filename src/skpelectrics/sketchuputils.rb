@@ -22,29 +22,36 @@ module Lvm444Dev
       end
     end
 
-    def self.calculate_reserves_by_entity(entity, reserves = Hash.new(0))
-      if entity.is_a?(Sketchup::Group)
-        puts "#{entity.name}:entities=#{entity.entities.size}"
-        entity.entities.each { |entity_in_group| calculate_reserves_by_entity(entity_in_group, reserves) }
-      elsif entity.is_a?(Sketchup::Edge)
-        puts "(edge):vertices=#{entity.vertices.size}"
-        entity.vertices.each { |vertex| calculate_reserves_by_entity(vertex, reserves) }
-      elsif entity.is_a?(Sketchup::Vertex)
-        puts "(vertex):edges=#{entity.edges.size}"
-        vertex_reserve = calculate_reserve_by_vertex(entity)
-        return reserves until vertex_reserve
+    def self.calculate_electric_line_reserves(line_group)
+      default_reserve_m = 0.3 # 300 mm default reserve length
+      reserves = Hash.new(0)
 
+      vertices = find_cable_ends(line_group)
+
+      vertices.each { |vertex|
+        vertex_reserve = default_reserve_m
         reserves[vertex_reserve] += 1
-      end
+      }
 
       reserves
     end
 
-    def self.calculate_reserve_by_vertex(vertex)
-      return nil unless vertex.edges.size == 1
+    def self.find_cable_ends(line_group)
+      cable_ends = []
 
-      default_length_m = 0.3 # 300 mm default reserve length
-      return default_length_m
+      # line_group
+      # if entity.is_a?(Sketchup::Group)
+      #   entity.entities.each { |entity_in_group| calculate_reserves_by_entity(entity_in_group, reserves) }
+      # elsif entity.is_a?(Sketchup::Edge)
+      #   entity.vertices.each { |vertex| calculate_reserves_by_entity(vertex, reserves) }
+      # elsif entity.is_a?(Sketchup::Vertex)
+      #   vertex_reserve = calculate_reserve_by_vertex(entity)
+      #   return reserves until vertex_reserve
+
+      #   reserves[vertex_reserve] += 1
+      # end
+
+      cable_ends
     end
 
     def self.get_skp_model
