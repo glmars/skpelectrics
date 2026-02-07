@@ -2,6 +2,7 @@ module Lvm444Dev
 
   require 'sketchup.rb'
   require_relative 'dialog_settings'
+  require_relative 'electric_line_length_calculator'
 
   module SketchupUtils
 
@@ -10,6 +11,12 @@ module Lvm444Dev
     # calculation
 
     def self.calculate_length_by_entity(entity)
+      calculator = ElectricLine::LengthCalculator.new
+      calculator.visit(entity)
+      calculator.length
+    end
+
+    def self.calculate_length_by_entity_old(entity)
       res = 0.0
       if entity.is_a?(Sketchup::Group)
         group = entity
