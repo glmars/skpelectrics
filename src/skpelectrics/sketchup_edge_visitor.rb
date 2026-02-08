@@ -19,6 +19,7 @@ module Lvm444Dev
         group.entities.each { |e| visit(e) }
       end
 
+      # @param edge [Sketchup::Edge] линия
       def visit_edge(edge)
       end
 
