@@ -3,6 +3,7 @@ module Lvm444Dev
   require 'sketchup.rb'
   require_relative 'dialog_settings'
   require_relative 'electric_line_length_calculator'
+  require_relative 'electric_line_cable_ends'
 
   module SketchupUtils
 
@@ -14,36 +15,18 @@ module Lvm444Dev
       calculator.length
     end
 
-    def self.calculate_electric_line_reserves(line_group)
-      default_reserve_m = 0.3 # 300 mm default reserve length
+    # @return [Hash<String, Integer>] количество резерва по типам объектов
+    def self.calculate_electric_line_reserves(entity)
+      cable_ends = ElectricLine::CableEnds.new
+      cable_ends.visit(entity)
+
       reserves = Hash.new(0)
 
-      vertices = find_cable_ends(line_group)
-
-      vertices.each { |vertex|
-        vertex_reserve = default_reserve_m
-        reserves[vertex_reserve] += 1
+      cable_ends.ends.each { |vertex|
+        reserves[''] += 1
       }
 
       reserves
-    end
-
-    def self.find_cable_ends(line_group)
-      cable_ends = []
-
-      # line_group
-      # if entity.is_a?(Sketchup::Group)
-      #   entity.entities.each { |entity_in_group| calculate_reserves_by_entity(entity_in_group, reserves) }
-      # elsif entity.is_a?(Sketchup::Edge)
-      #   entity.vertices.each { |vertex| calculate_reserves_by_entity(vertex, reserves) }
-      # elsif entity.is_a?(Sketchup::Vertex)
-      #   vertex_reserve = calculate_reserve_by_vertex(entity)
-      #   return reserves until vertex_reserve
-
-      #   reserves[vertex_reserve] += 1
-      # end
-
-      cable_ends
     end
 
     def self.get_skp_model
