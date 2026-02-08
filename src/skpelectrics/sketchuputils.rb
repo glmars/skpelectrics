@@ -6,27 +6,12 @@ module Lvm444Dev
 
   module SketchupUtils
 
-    INCH_SCALE ||= 0.0254
-
     # calculation
 
     def self.calculate_length_by_entity(entity)
       calculator = ElectricLine::LengthCalculator.new
       calculator.visit(entity)
       calculator.length
-    end
-
-    def self.calculate_length_by_entity_old(entity)
-      res = 0.0
-      if entity.is_a?(Sketchup::Group)
-        group = entity
-        group.entities.each do |entity|
-          res += self.calculate_length_by_entity(entity).to_f
-        end
-        return res
-      elsif entity.is_a?(Sketchup::Edge)
-        return entity.length * INCH_SCALE
-      end
     end
 
     def self.calculate_electric_line_reserves(line_group)
@@ -168,6 +153,7 @@ module Lvm444Dev
       types
     end
 
+    # @return [Array<Lvm444Dev::ElectricLineModel>] массив электрических линий
     def self.search_electric_lines
       model = Sketchup.active_model
       root_groups = model.entities.grep(Sketchup::Group)
