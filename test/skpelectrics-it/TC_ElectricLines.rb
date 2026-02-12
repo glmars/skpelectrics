@@ -13,12 +13,6 @@ module Lvm444Dev
       assert_equal(3, @lines.size)
     end
 
-    def test_length
-      length = @lines.map{ |line| line.length }.sum
-
-      assert_in_delta(20.502, length)
-    end
-
     def test_attributes
       line = get_line('02-РОЗ-Кухня Плита (no wirings)')
 
@@ -31,18 +25,26 @@ module Lvm444Dev
     def test_line_info_01
       line = get_line_info('01-РОЗ-Кухня')
 
+      assert_in_delta(5.582 + 4.690, line[:length], delta = 0.0001)
+      assert_in_delta(5.582, line[:wirings]['Гофра'], delta = 0.0001)
+      assert_in_delta(4.690, line[:wirings]['Штроба'], delta = 0.0001)
       assert_equal({'' => 6}, line[:reserves])
     end
 
     def test_line_info_02
       line = get_line_info('02-РОЗ-Кухня Плита (no wirings)')
 
+      assert_in_delta(5.446, line[:length], delta = 0.0001)
+      assert_equal({}, line[:wirings])
       assert_equal({'' => 2}, line[:reserves])
     end
 
     def test_line_info_03
       line = get_line_info('03-ОСВ-Кухня')
 
+      assert_in_delta(2.914 + 1.870, line[:length], delta = 0.0001)
+      assert_in_delta(2.914, line[:wirings]['Гофра'], delta = 0.0001)
+      assert_in_delta(1.870, line[:wirings]['Штроба'], delta = 0.0001)
       assert_equal({'' => 6}, line[:reserves])
     end
 
