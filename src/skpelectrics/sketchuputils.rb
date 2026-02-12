@@ -12,7 +12,13 @@ module Lvm444Dev
     def self.calculate_length_by_entity(entity)
       calculator = ElectricLine::LengthCalculator.new
       calculator.visit(entity)
-      calculator.length
+      return calculator.length
+
+      reserves = self.calculate_electric_line_reserves(entity)
+      reserve_length =
+        reserves.map { |type, count| count * self.get_reserve_length_by_type(type) }.sum
+
+      calculator.length + reserve_length
     end
 
     # @return [Hash<String, Integer>] количество резерва по типам объектов
@@ -27,6 +33,10 @@ module Lvm444Dev
       }
 
       reserves
+    end
+
+    def self.get_reserve_length_by_type(entity)
+      0.3 # для всех пока дефолт
     end
 
     def self.get_skp_model
