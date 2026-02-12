@@ -28,25 +28,35 @@ module Lvm444Dev
       assert_equal('Плита (no wirings)', line.description)
     end
 
-    def test_reserves
-      reserves = get_line('03-ОСВ-Кухня').reserves
+    def test_line_info_01
+      line = get_line_info('01-РОЗ-Кухня')
 
-      assert_equal({'' => 6}, reserves)
+      assert_equal({'' => 6}, line[:reserves])
     end
 
-    def test_reserves_simple
-      reserves = get_line('02-РОЗ-Кухня Плита (no wirings)').reserves
+    def test_line_info_02
+      line = get_line_info('02-РОЗ-Кухня Плита (no wirings)')
 
-      assert_equal({'' => 2}, reserves)
+      assert_equal({'' => 2}, line[:reserves])
     end
 
-    def test_reserves_complex
-      reserves = get_line('01-РОЗ-Кухня').reserves
+    def test_line_info_03
+      line = get_line_info('03-ОСВ-Кухня')
 
-      assert_equal({'' => 6}, reserves)
+      assert_equal({'' => 6}, line[:reserves])
     end
 
     private
+    def get_line_info(name)
+      line = get_line(name)
+
+      {
+        :length => line.length,
+        :reserves => line.reserves,
+        :wirings => line.wire_type_sums
+      }
+    end
+
     # @return [Lvm444Dev::ElectricLineModel] электрическая линия
     def get_line(name)
       @lines.find(proc { flunk("Line not found: #{name}") }) do |line|
