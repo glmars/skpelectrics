@@ -25,6 +25,15 @@ module Lvm444Dev
       command.large_icon = 'images/report.png'
       command.small_icon = 'images/report_small.png'
       toolbar.add_item(command)
+
+      command = UI::Command.new('Добавить запас кабеля') {
+        Lvm444Dev::SkpElectricsDialogs::DialogsEditReserves.show_dialog
+      }
+      command.tooltip = 'Добавить запас кабеля'
+      command.status_bar_text = 'Добавить запас кабеля в розетках, коробках, выключателях и т.д.'
+      command.large_icon = 'images/reserves.png'
+      command.small_icon = 'images/reserves_small.png'
+      toolbar.add_item(command)
       toolbar.restore
 
       menu = UI.menu('Plugins').add_submenu('skpelectrics')
@@ -47,6 +56,10 @@ module Lvm444Dev
 
       menu.add_item('Отредактировать справочник материалов') {
         Lvm444Dev::SkpElectricsDialogs::DialogsEditMaterial.show_dialog
+      }
+
+      menu.add_item('Добавить запас кабеля') {
+        Lvm444Dev::SkpElectricsDialogs::DialogsEditReserves.show_dialog
       }
 
       line_transformations_menu = menu.add_submenu('Преобразования')
