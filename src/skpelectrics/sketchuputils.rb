@@ -15,18 +15,18 @@ module Lvm444Dev
       calculator.length
     end
 
-    # @return [Hash<String, Integer>] количество резерва по типам объектов
-    def self.calculate_electric_line_reserves(entity)
+    # @return [Hash<String, Integer>] тип на количество
+    def self.find_cable_ends(entity)
       cable_ends = ElectricLine::CableEnds.new
       cable_ends.visit(entity)
 
-      reserves = Hash.new(0)
+      type_to_count = Hash.new(0)
 
       cable_ends.ends.each { |vertex|
-        reserves[''] += 1
+        type_to_count[''] += 1
       }
 
-      reserves
+      type_to_count
     end
 
     def self.get_skp_model

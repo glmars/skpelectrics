@@ -64,7 +64,6 @@ module Lvm444Dev
           room: @room,
           description: @description,
           length: length,
-          reserves: reserves,
           wire_type_sums:wire_type_sums
         }
     end
@@ -85,8 +84,8 @@ module Lvm444Dev
       Lvm444Dev::SketchupUtils.calculate_length_by_entity(@group)
     end
 
-    def reserves
-      Lvm444Dev::SketchupUtils.calculate_electric_line_reserves(@group)
+    def cable_ends
+      Lvm444Dev::SketchupUtils.find_cable_ends(@group)
     end
 
     def wire_type_sums
