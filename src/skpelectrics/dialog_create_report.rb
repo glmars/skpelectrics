@@ -98,9 +98,15 @@ module Lvm444Dev
           @dialog.bring_to_front
         end
 
+        @dialog_create_time = Time.now
         @dialog = self.create_dialog
         @dialog.add_action_callback('edit_wiring_type') { |action_context, wiring_type|
           self.edit_wiring_type(wiring_type)
+          nil
+        }
+        @dialog.add_action_callback('created') { |action_context|
+          duration = Time.now - @dialog_create_time
+          puts "Report: #{duration.round(3)}s"
           nil
         }
         @dialog.show
