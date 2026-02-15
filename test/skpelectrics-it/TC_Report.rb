@@ -47,6 +47,16 @@ module Lvm444Dev
       assert_equal({}, line[:wire_type_sums])
     end
 
+    def test_line_03
+      line = get_line_by_number('03')
+      assert_equal('ОСВ', line[:type])
+      assert_nil(line[:description])
+      assert_in_delta(4.784, line[:length], delta = 0.0001)
+
+      assert_in_delta(2.914, line[:wire_type_sums]['Гофра'], delta = 0.0001)
+      assert_in_delta(1.870, line[:wire_type_sums]['Штроба'], delta = 0.0001)
+    end
+
     private
     def get_room_summary(name)
       @data[:summary][:lines_room_summary][name]
