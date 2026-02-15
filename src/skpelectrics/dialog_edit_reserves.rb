@@ -10,7 +10,7 @@ module Lvm444Dev
 
         prompts = ["На всех концах (мм):"]
         defaults = [length.to_s]
-        input = UI.inputbox(prompts, defaults, 'Добавить запас кабеля')
+        input = UI.inputbox(prompts, defaults, 'Добавлять запас кабеля')
         return unless input
 
         length = input[0].to_i
