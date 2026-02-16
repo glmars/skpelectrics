@@ -38,11 +38,12 @@ module Lvm444Dev
       def self.collect_report_data()
         lines = Lvm444Dev::SketchupUtils.search_electric_lines
         lines_data = collect_lines_data(lines)
+        wirings = get_wiring_types(lines_data)
 
         {
           lines: lines_data,
-          summary: calculate_summary(lines_data),
-          wirings: get_wiring_types(lines_data),
+          summary: calculate_summary(lines_data, wirings),
+          wirings: wirings,
           warnings: validate_line_number_collisions(lines)
         }
       end
@@ -64,7 +65,7 @@ module Lvm444Dev
           end
       end
 
-      def self.calculate_summary(lines)
+      def self.calculate_summary(lines, wirings)
 
         model = Sketchup.active_model
         dict = Lvm444Dev::ElectricalMaterialsDictionary.new(model)
@@ -94,7 +95,7 @@ module Lvm444Dev
         {
           :lines_type_summary => lines_type_summary,
           :lines_room_summary => lines_room_summary,
-          :materials_summary => materials_summary
+          :materials_summary => materials_summary.merge(wirings)
         }
       end
 

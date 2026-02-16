@@ -22,11 +22,17 @@ module Lvm444Dev
     def test_material_summary
       assert_in_delta(6.584, get_material_summary('ВВГ 3*1.5'), delta = 0.0001)
       assert_in_delta(18.118, get_material_summary('ВВГ 3*2.5'), delta = 0.0001)
+
+      assert_in_delta(8.496, get_material_summary('Гофра'), delta = 0.0001)
+      assert_in_delta(6.560, get_material_summary('Штроба'), delta = 0.0001)
+
+      materials = @data[:summary][:materials_summary].keys.sort
+      assert_equal(['ВВГ 3*1.5', 'ВВГ 3*2.5', 'Гофра', 'Штроба'], materials)
     end
 
     def test_wirings
       wirings = @data[:wirings].keys.sort
-      assert_equal(["Гофра", "Штроба"], wirings)
+      assert_equal(['Гофра', 'Штроба'], wirings)
     end
 
     def test_line_01
