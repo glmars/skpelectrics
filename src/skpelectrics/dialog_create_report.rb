@@ -76,26 +76,27 @@ module Lvm444Dev
 
         lines.each do |line|
           line_length = line[:length]
-          line_type = line[:type]
 
-          lines_type_summary[line_type] += line_length
+          lines_type_summary[line[:type]] += line_length
           lines_room_summary[line[:room]] += line_length
+        end
 
-          materials_hash = dict.get_materials_by_type(line_type)
+        lines_type_summary.merge(wirings).each do |type, length|
+          materials_hash = dict.get_materials_by_type(type)
           if (materials_hash != nil)
             materials_hash.each do |material_id,material_desc|
-              materials_summary[material_desc] += line_length
+              materials_summary[material_desc] += length
             end
           else
-            unknown_material = "Не определено - #{line_type}"
-            materials_summary[unknown_material] += line_length
+            unknown_material = "Не определено - #{type}"
+            materials_summary[unknown_material] += length
           end
         end
 
         {
           :lines_type_summary => lines_type_summary,
           :lines_room_summary => lines_room_summary,
-          :materials_summary => materials_summary.merge(wirings)
+          :materials_summary => materials_summary
         }
       end
 
