@@ -51,10 +51,26 @@ module Lvm444Dev
       # @param view [Sketchup::View]
       def draw(view)
         @mouse_ip.draw(view) if @mouse_ip.display?
+        draw_preview(view)
       end
 
       def onSetCursor
         UI.set_cursor(CURSOR_PENCIL)
+      end
+
+      private
+
+      # @param view [Sketchup::View]
+      def draw_preview(view)
+        return unless @mouse_ip.valid?
+
+        point = @mouse_ip.position
+        end_point = Geom::Point3d.new(point.x, point.y, DEFAULT_TARGET_HEIGHT)
+
+        view.set_color_from_line(point, end_point)
+        view.line_width = 1
+        view.line_stipple = ''
+        view.draw(GL_LINES, [point, end_point])
       end
     end
 
