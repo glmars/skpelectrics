@@ -3,6 +3,8 @@ require 'sketchup'
 module Lvm444Dev
   module LineupTool
     DEFAULT_TARGET_HEIGHT = 3.m
+     # Here we have hard coded a special ID for the pencil cursor in SketchUp.
+    CURSOR_PENCIL = 632
 
     def self.activate
       model = Sketchup.active_model
@@ -64,10 +66,9 @@ module Lvm444Dev
         view.invalidate
       end
 
-      # Остальные методы для совместимости — оставляем пустыми
-      def onLButtonUp(flags, x, y, view); end
-      def onMButtonDown(flags, x, y, view); end
-      def onUserText(text, view); end
+      def onSetCursor
+        UI.set_cursor(CURSOR_PENCIL)
+      end
     end
 
   end
