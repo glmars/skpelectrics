@@ -2,7 +2,7 @@ require 'sketchup'
 
 module Lvm444Dev
   module LineupTool
-    DEFAULT_TARGET_HEIGHT = 3.m
+    DEFAULT_TARGET_HEIGHT = 3000.mm
      # Here we have hard coded a special ID for the pencil cursor in SketchUp.
     CURSOR_PENCIL = 632
 
@@ -16,6 +16,7 @@ module Lvm444Dev
 
     class Tool
       def activate
+        @mouse_ip = Sketchup::InputPoint.new
       end
 
       # @param view [Sketchup::View]
@@ -25,10 +26,10 @@ module Lvm444Dev
 
       # @param view [Sketchup::View]
       def onLButtonDown(flags, x, y, view)
-        ip = view.inputpoint(x, y)
-        return unless ip.valid?
+        @mouse_ip.pick(view, x, y)
+        return unless @mouse_ip.valid?
 
-        point = ip.position
+        point = @mouse_ip.position
 
         model = Sketchup.active_model
         entities = model.active_entities
@@ -37,33 +38,19 @@ module Lvm444Dev
 
         # Рисуем линию
         entities.add_line(point, end_point)
+        view.invalidate
       end
 
       # @param view [Sketchup::View]
       def onMouseMove(flags, x, y, view)
-        ip = view.inputpoint(x, y)
-        return unless ip.valid?
-
-        highlight_point(ip, view)
+        @mouse_ip.pick(view, x, y)
+        view.tooltip = @mouse_ip.tooltip if @mouse_ip.valid?
+        view.invalidate
       end
 
-      # @param inputpoint [Sketchup::InputPoint]
       # @param view [Sketchup::View]
-      def highlight_point(inputpoint, view)
-        # Рисуем круг вокруг точки привязки
-        center = inputpoint.position
-        radius = 20  # размер подсветки в мм
-        points = []
-
-        (0..360).step(30) do |angle|
-          rad = angle * Math::PI / 180
-          x = center.x + radius * Math.cos(rad)
-          y = center.y + radius * Math.sin(rad)
-          points << Geom::Point3d.new(x, y, center.z)
-        end
-
-        view.draw(GL_LINE_LOOP, points)
-        view.invalidate
+      def draw(view)
+        @mouse_ip.draw(view) if @mouse_ip.display?
       end
 
       def onSetCursor
