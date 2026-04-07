@@ -16,6 +16,7 @@ module Lvm444Dev
     class Tool
       def activate
         @mouse_ip = Sketchup::InputPoint.new
+        @picked_ip = Sketchup::InputPoint.new
         @target_height = Lvm444Dev::SkpElectrics::Settings.get_lineupdown_target_height || 3000.mm
         update_ui
       end
@@ -27,6 +28,7 @@ module Lvm444Dev
       def onLButtonDown(flags, x, y, view)
         @mouse_ip.pick(view, x, y)
         return unless @mouse_ip.valid?
+        @picked_ip.copy!(@mouse_ip)
 
         point = @mouse_ip.position
         end_point = Geom::Point3d.new(point.x, point.y, @target_height)
@@ -45,6 +47,7 @@ module Lvm444Dev
       end
 
       def draw(view)
+        draw_preview(view)
         @mouse_ip.draw(view) if @mouse_ip.display?
       end
 
@@ -82,6 +85,23 @@ module Lvm444Dev
         Sketchup.vcb_label = 'Высота потолков (0 - рисовать до пола)'
         Sketchup.vcb_value = @target_height.to_s
         Sketchup.status_text = 'Кликните для выбора начальной точки'
+      end
+
+      # @param view [Sketchup::View]
+      def draw_preview(view)
+        return unless @picked_ip.valid?
+
+        reserve_length = 300.mm
+        point = @picked_ip.position
+        end_point = Geom::Point3d.new(point.x, point.y, point.z - reserve_length)
+
+        view.line_width = 2
+        view.line_stipple = '.'
+        view.drawing_color = 'BlueViolet'
+        view.draw_line(point, end_point)
+
+        view.draw_text(point, reserve_length.to_s,
+          { bold: true, color: 'BlueViolet' })
       end
     end
 
