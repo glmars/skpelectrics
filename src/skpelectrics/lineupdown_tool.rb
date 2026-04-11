@@ -87,12 +87,31 @@ module Lvm444Dev
         Sketchup.status_text = 'Кликните для выбора начальной точки'
       end
 
-      # @param view [Sketchup::View]
       def draw_preview(view)
-        return unless @picked_ip.valid?
+        draw_picked_ip(view)
+        draw_reserves(view)
+      end
 
+      def draw_picked_ip(view)
+        draw_reserve(@picked_ip.position, view) if @picked_ip.valid?
+      end
+
+      def draw_reserves(view)
+        lines = Lvm444Dev::SkpElectricsLinesManager.search_electric_lines
+        lines.each { |line| draw_line_reserves(line, view) }
+      end
+
+      # @param line [Lvm444Dev::ElectricLineModel]
+      def draw_line_reserves(line, view)
+        cable_ends = Lvm444Dev::ElectricLine::CableEnds.new
+        cable_ends.visit(line.get_group)
+        cable_ends.ends.each { |vertex| draw_reserve(vertex.position, view) }
+      end
+
+      # @param point [Geom::Point3d]
+      # @param view [Sketchup::View]
+      def draw_reserve(point, view)
         reserve_length = 300.mm
-        point = @picked_ip.position
         end_point = Geom::Point3d.new(point.x, point.y, point.z - reserve_length)
 
         view.line_width = 2

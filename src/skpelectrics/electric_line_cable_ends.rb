@@ -12,6 +12,7 @@ module Lvm444Dev
         @point_to_vertexes = Hash.new { |hash, key| hash[key] = [] }
       end
 
+      # @return [Array<Sketchup::Vertex>]
       def ends
         @point_to_vertexes.values
           .filter { |vertexes| vertexes.size == 1 }
