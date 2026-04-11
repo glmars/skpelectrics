@@ -100,7 +100,8 @@ module Lvm444Dev
         view.drawing_color = 'BlueViolet'
         view.draw_line(point, end_point)
 
-        view.draw_text(point, reserve_length.to_s,
+        screen_text_point = view.screen_coords(end_point)
+        view.draw_text(screen_text_point, reserve_length.to_s,
           { bold: true, color: 'BlueViolet' })
       end
     end
